@@ -1,95 +1,76 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet, Image } from 'react-native';
+import { Image, Platform, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { ScanProductsCard } from '@/components/scan-products-card';
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+const COLORS = {
+  background: '#F6FAFC',
+  text: '#0A141A',
+  textSecondary: '#546871',
+} as const;
 
 export default function HomeScreen() {
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.header}>
-          {/* <AnimatedIcon /> */}
-          <ThemedView>
-            <Image style={styles.logo} source={require("../../assets/img/logo.png")}/>
-            <ThemedText>Добрый вечер </ThemedText>
-          </ThemedView>
-        </ThemedView>
+    <View style={styles.screen}>
+      <StatusBar backgroundColor="transparent" barStyle="dark-content" translucent />
 
-        <ThemedText style={styles.heading}>Что приготовим сегодня?</ThemedText>
+      <SafeAreaView edges={['top']} style={styles.safeArea}>
+        <View style={styles.content}>
+          <Image
+            accessibilityLabel="Fridgy"
+            resizeMode="contain"
+            source={require('../../assets/img/logo.png')}
+            style={styles.logo}
+          />
 
-        {Platform.OS === 'web' && <WebBadge />}
+          <View style={styles.intro}>
+            <Text style={styles.greeting}>Добрый вечер</Text>
+            <Text style={styles.heading}>Что приготовим сегодня?</Text>
+          </View>
+
+          <ScanProductsCard />
+        </View>
       </SafeAreaView>
-    </ThemedView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    backgroundColor: COLORS.background,
   },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    paddingTop: Platform.select({ web: Spacing.six + Spacing.three, default: 0 }),
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    backgroundColor: COLORS.background,
   },
-  header: {
+  content: {
     width: '100%',
+    maxWidth: 390,
+    alignSelf: 'center',
+    paddingTop: Platform.select({ web: 27, default: 3 }),
+    paddingHorizontal: 20,
   },
   logo: {
     width: 65,
-    height: 52
+    height: 52,
+    marginLeft: 4,
+  },
+  intro: {
+    marginTop: 22,
+    marginHorizontal: 4,
+    gap: 8,
+  },
+  greeting: {
+    color: COLORS.textSecondary,
+    fontFamily: 'Manrope_400Regular',
+    fontSize: 12,
+    lineHeight: 16,
   },
   heading: {
-    width: 334,
-    height: 36,
-    fontFamily: "Manrope",
+    color: COLORS.text,
+    fontFamily: 'Manrope_700Bold',
     fontSize: 26,
-    fontWeight: "700",
-    fontStyle: "normal",
-    lineHeight: 26,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+    lineHeight: 36,
   },
 });
