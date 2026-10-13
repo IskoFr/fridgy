@@ -1,7 +1,8 @@
 import * as Device from 'expo-device';
-import { Image, Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { AnimatedIcon } from '@/components/animated-icon';
 import { HintRow } from '@/components/hint-row';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -35,24 +36,11 @@ export default function HomeScreen() {
           {/* <AnimatedIcon /> */}
           <ThemedView>
             <Image style={styles.logo} source={require("../../assets/img/logo.png")}/>
+            <ThemedText>Добрый вечер </ThemedText>
           </ThemedView>
         </ThemedView>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+        <ThemedText style={styles.heading}>Что приготовим сегодня?</ThemedText>
 
         {Platform.OS === 'web' && <WebBadge />}
       </SafeAreaView>
@@ -80,6 +68,15 @@ const styles = StyleSheet.create({
   logo: {
     width: 65,
     height: 52
+  },
+  heading: {
+    width: 334,
+    height: 36,
+    fontFamily: "Manrope",
+    fontSize: 26,
+    fontWeight: "700",
+    fontStyle: "normal",
+    lineHeight: 26,
   },
   title: {
     textAlign: 'center',
