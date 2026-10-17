@@ -1,76 +1,228 @@
-import { Image, Platform, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Image, View, Text, StatusBar, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { ScanProductsCard } from '@/components/scan-products-card';
-
-const COLORS = {
-  background: '#F6FAFC',
-  text: '#0A141A',
-  textSecondary: '#546871',
-} as const;
+import { 
+  useFonts, 
+  Manrope_300Light,
+  Manrope_400Regular,
+  Manrope_600SemiBold,
+  Manrope_700Bold
+} from '@expo-google-fonts/manrope';
+import { useState } from 'react';
 
 export default function HomeScreen() {
+  const [filter, setFilter] = useState<number>(1);
+  
+  let [fontsLoaded] = useFonts({
+    Manrope_300Light,
+    Manrope_400Regular,
+    Manrope_600SemiBold,
+    Manrope_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
+  const toggleFilters = (value: number) => {
+    setFilter(value);
+  };
+
   return (
-    <View style={styles.screen}>
-      <StatusBar backgroundColor="transparent" barStyle="dark-content" translucent />
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar hidden={false}/>
+      <View style={styles.container}>
+        <Image style={styles.logo} source={require("../../assets/img/logo.png")}/>
+        
+        <View style={styles.headerText}>
+          <Text style={styles.greeting}>Добрый вечер</Text>
+          <Text style={styles.heading}>Что приготовим сегодня?</Text>
+        </View>
 
-      <SafeAreaView edges={['top']} style={styles.safeArea}>
-        <View style={styles.content}>
-          <Image
-            accessibilityLabel="Fridgy"
-            resizeMode="contain"
-            source={require('../../assets/img/logo.png')}
-            style={styles.logo}
-          />
-
-          <View style={styles.intro}>
-            <Text style={styles.greeting}>Добрый вечер</Text>
-            <Text style={styles.heading}>Что приготовим сегодня?</Text>
+        <View style={styles.banner}>
+          <Text style={styles.bannerLabel}>AI-помощник</Text>
+          
+          <View style={styles.bannerTextGroup}>
+            <Text style={styles.bannerTitle}>
+              Покажи холодильник -{'\n'}найду ужин за минуту
+            </Text>
+            <Text style={styles.bannerSubtitle}>
+              Сфотографируй продукты, и Fridgy предложит простые рецепты из того, что уже есть.
+            </Text>
           </View>
 
-          <ScanProductsCard />
+          <Pressable style={styles.button}>
+            <Text style={styles.buttonText}>Сканировать продукты</Text>
+          </Pressable>
         </View>
-      </SafeAreaView>
-    </View>
+
+        <View style={styles.filters}>
+          <Text style={styles.filtersHeading}>Под тебя сегодня</Text>
+          <View style={styles.filterItems}>
+            <Pressable onPress={() => toggleFilters(1)} style={[
+                styles.filterItem, 
+                filter === 1 && styles.activeFilterItem
+                ]}>
+              <Text style={{color: filter === 1 ? '#fff' : '#000'}}>
+                  До 20 мин
+              </Text>
+            </Pressable>
+            <Pressable onPress={() => toggleFilters(2)} style={[
+                styles.filterItem, 
+                filter === 2 && styles.activeFilterItem
+                ]}>
+              <Text style={{color: filter === 2 ? '#fff' : '#000'}}>
+                  ≤ 500 ккал
+              </Text>
+            </Pressable>
+            <Pressable onPress={() => toggleFilters(3)} style={[
+                styles.filterItem, 
+                filter === 3 && styles.activeFilterItem
+                ]}>
+              <Text style={{color: filter === 3 ? '#fff' : '#000'}}>
+                  Веган
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+
+        <View style={styles.ideas}>
+          <Text style={styles.ideasHeading}>Быстрые идеи</Text>
+          <View style={styles.ideasList}></View>
+        </View>
+      </View>
+    </SafeAreaView>
+
+
   );
 }
-
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
   safeArea: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: '#ffffff',
   },
-  content: {
-    width: '100%',
-    maxWidth: 390,
-    alignSelf: 'center',
-    paddingTop: Platform.select({ web: 27, default: 3 }),
-    paddingHorizontal: 20,
+  container: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 10,
   },
   logo: {
     width: 65,
     height: 52,
-    marginLeft: 4,
   },
-  intro: {
-    marginTop: 22,
-    marginHorizontal: 4,
+  headerText: {
+    marginTop: 24, 
     gap: 8,
+    width: 334,
   },
   greeting: {
-    color: COLORS.textSecondary,
     fontFamily: 'Manrope_400Regular',
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: 14,
+    color: '#8A8A8E',
   },
   heading: {
-    color: COLORS.text,
     fontFamily: 'Manrope_700Bold',
     fontSize: 26,
-    lineHeight: 36,
+    lineHeight: 26,
+    color: '#1C1C1E',
   },
+  banner: {
+    width: 350,
+    height: 220,
+    backgroundColor: '#F4F9FD', 
+    borderRadius: 24,
+    marginTop: 24,
+    paddingTop: 20,
+    paddingRight: 25,
+    paddingBottom: 16,
+    paddingLeft: 30,
+    gap: 10,
+  },
+  bannerLabel: {
+    fontFamily: 'Manrope_600SemiBold',
+    fontSize: 12,
+    color: '#168CE1',
+  },
+  bannerTextGroup: {
+    width: 295,
+    gap: 10,
+  },
+  bannerTitle: {
+    fontFamily: 'Manrope_700Bold',
+    fontSize: 20,
+    color: '#1C1C1E',
+  },
+  bannerSubtitle: {
+    fontFamily: 'Manrope_400Regular',
+    fontSize: 12,
+    color: '#546871',
+  },
+  button: {
+    width: 295,
+    height: 40,
+    backgroundColor: '#1479C9',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 6,
+  },
+  buttonText: {
+    fontFamily: 'Manrope_600SemiBold',
+    fontSize: 13,
+    color: '#FFFFFF',
+  },
+  filters: {
+    width: '100%',
+    marginTop: 24,
+    gap: 14
+  },
+  filtersHeading: {
+    color: '#0A141A',
+    fontFamily: 'Manrope_600SemiBold',
+    fontSize: 16,
+  },
+  filterItems: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  filterItem: {
+    textAlign: 'center',
+    width: '30%',
+    backgroundColor: '#EDF2F5',
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+  },
+  activeFilterItem: {
+    backgroundColor: '#1479C9'
+  },
+  ideas: {
+    width: '100%',
+    marginTop: 24,
+    gap: 14
+  },
+  ideasHeading: {
+    color: '#0A141A',
+    fontFamily: 'Manrope_600SemiBold',
+    fontSize: 16,
+  },
+  ideasList: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 18
+  }
+  idea: {
+    width: 48%,
+    backgroundColor: #fff,
+    padding: 12,
+    flexDirection: 'column',
+  }
+  ideaTitle: {
+    color: #0A141A,
+    fonrSize: 13,
+    fontFamily: 'Manrope_600SemiBold',
+  }
+
 });
