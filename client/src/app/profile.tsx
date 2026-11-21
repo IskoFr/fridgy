@@ -25,7 +25,7 @@ export default function ProfileScreen() {
             <View style={styles.container}>
                 <Image style={styles.logo} source={require("../../assets/img/logo.png")} />
                 <View style={styles.info}>
-                    <Image style={styles.avatar} source={require("@/assets/img/User.jpg")} />
+                    <Image style={styles.avatar} source={require("@/assets/img/User.png")} />
 
                     <Text style={styles.name}>Iskander</Text>
                     <Text style={styles.email}>user@example.com</Text>
